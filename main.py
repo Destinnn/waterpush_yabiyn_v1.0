@@ -1,5 +1,4 @@
 from datetime import date, datetime
-from time import time, localtime
 import math
 from wechatpy import WeChatClient
 from wechatpy.client.api import WeChatMessage, WeChatTemplate
@@ -19,20 +18,12 @@ user_id = os.environ["USER_ID"]
 user_id2 = os.environ["USER_ID2"]
 template_id = os.environ["TEMPLATE_ID"]
 
-def get_today():
-  week_list = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
-  year = localtime().tm_year
-  month = localtime().tm_mon
-  day = localtime().tm_mday
-  today = datetime.date(datetime(year=year, month=month, day=day))
-  week = week_list[today.isoweekday() % 7]
-  return "{} {}".format(today, week)
 
 def get_weather():
   url = "http://autodev.openspeech.cn/csp/api/v2.1/weather?openId=aiuicus&clientType=android&sign=android&city=" + city
   res = requests.get(url).json()
   weather = res['data']['list'][0]
-  return weather['weather'], math.floor(weather['temp']), math.floor(weather['low']), math.floor(weather['high'])
+  return weather['weather'], math.floor(weather['temp'])
 
 def get_count():
   delta = today - datetime.strptime(start_date, "%Y-%m-%d")
@@ -62,4 +53,3 @@ data = {"weather":{"value":wea},"temperature":{"value":temperature},"love_days":
 res = wm.send_template(user_id, template_id, data)
 #res2 = wm.send_template(user_id2, template_id, data)
 print(res)
-
